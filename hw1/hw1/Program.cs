@@ -84,7 +84,7 @@ class Program
         {
             if (Char.IsLetter(user_file[i]))
             {
-                if (user_file[i] == alphabet[j])
+                if (Char.ToLower(user_file[i]) == Char.ToLower(alphabet[j]))
                 {
                     cryp_file[i] = with_key_alph[j];
                     i++;
@@ -98,6 +98,34 @@ class Program
             }
 
             j++;  
+        }
+    }
+
+    static void Decryption()
+    {
+        cryp_file = new char[user_file.Length];
+
+        int i = 0;
+        int j = 0;
+
+        while (i != user_file.Length && j != 26)
+        {
+            if (Char.IsLetter(user_file[i]))
+            {
+                if (Char.ToUpper(user_file[i]) == Char.ToUpper(with_key_alph[j]))
+                {
+                    cryp_file[i] = alphabet[j];
+                    i++;
+                    j = -1;
+                }
+            }
+            else
+            {
+                i++;
+                j = -1;
+            }
+
+            j++;
         }
     }
 
@@ -122,25 +150,41 @@ class Program
             key = Convert.ToInt32(Console.ReadLine());
         } while (!(key >= 0 || key <= 25));
 
-        //converts the char key into a int for better useablitly 
-
         //creates a alphbet array with a shift based on the number from the key
         CreateCaesarCipher(key);
 
 
         //Promt user for path to plan text file or ciphertext file
-        string filepath = (@"C:\Users\Jess\Documents\Repos\Cryptography\hw1\hw1\test.txt");
-
-        //sends file off to be stored in a array
-        ReadFile(filepath);
-
-
-        //the array containing the file will be encrypted
-        Encryption();
+        //Console.WriteLine("Enter file path to get file from: ");
+        //string getfilepath = Console.ReadLine();
+        string getfilepath = (@"C:\Users\Jess\Documents\Repos\Cryptography\hw1\hw1\text_en.txt");
 
 
-        //the array containing the file will be decrypted
+        //Promt user for path to plan text file or ciphertext file to save it to
+        //Console.WriteLine("Enter file path to send file to: ");
+        //string setfilepath = Console.ReadLine();
+        string setfilepath = (@"C:\Users\Jess\Documents\Repos\Cryptography\hw1\hw1\test_de.txt");
 
+
+
+
+
+        if (choice == '1')
+        {
+            //sends file off to be stored in a array
+            ReadFile(getfilepath);
+            //the array containing the file will be encrypted
+            Encryption();
+
+        }
+        else
+        {
+            //sends file off to be stored in a array
+            ReadFile(setfilepath);
+            //the array containing the file will be decrypted
+            Decryption();
+
+        }
 
 
         //promt user for path and file name to save the plan text or cipher file
