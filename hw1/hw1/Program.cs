@@ -17,9 +17,12 @@ class Program
                                           'u', 'v', 'w', 'x', 'y',
                                           'z'};
 
+    //the shifted alphabet after using the key on it
     static char[] with_key_alph = new char[26];
 
+    //the raw characters inside of the file the user provided
     static char[] user_file;
+    //the characters from the user file that have been transposed
     static char[] cryp_file;
 
     static public void CreateCaesarCipher (int key)
@@ -71,6 +74,25 @@ class Program
 
         } while (i != num_of_letters);
 
+        reader.Close();
+
+    }
+
+    static void WriteFile (string filepath)
+    {
+        StreamWriter writer;
+
+        writer = new StreamWriter(filepath);
+
+        int i = 0;
+
+        while(i != user_file.Length)
+        {
+            writer.Write(cryp_file[i]);
+            i++;
+        }
+
+        writer.Close();
     }
 
     static void Encryption ()
@@ -84,9 +106,10 @@ class Program
         {
             if (Char.IsLetter(user_file[i]))
             {
-                if (Char.ToLower(user_file[i]) == Char.ToLower(alphabet[j]))
+                if (Char.ToUpper(user_file[i]) == Char.ToUpper(alphabet[j]))
                 {
-                    cryp_file[i] = with_key_alph[j];
+                    //make ciphertext all UPPERCASE
+                    cryp_file[i] = Char.ToUpper(with_key_alph[j]);
                     i++;
                     j = -1;
                 }
@@ -112,9 +135,10 @@ class Program
         {
             if (Char.IsLetter(user_file[i]))
             {
-                if (Char.ToUpper(user_file[i]) == Char.ToUpper(with_key_alph[j]))
+                if (Char.ToLower(user_file[i]) == Char.ToLower(with_key_alph[j]))
                 {
-                    cryp_file[i] = alphabet[j];
+                    //make plantext all lowercase
+                    cryp_file[i] = Char.ToLower(alphabet[j]);
                     i++;
                     j = -1;
                 }
@@ -148,7 +172,7 @@ class Program
         {
             Console.WriteLine("Enter a number between 0 and 25 for the key: ");
             key = Convert.ToInt32(Console.ReadLine());
-        } while (!(key >= 0 || key <= 25));
+        } while (!(key >= 0 && key <= 25));
 
         //creates a alphbet array with a shift based on the number from the key
         CreateCaesarCipher(key);
@@ -157,15 +181,13 @@ class Program
         //Promt user for path to plan text file or ciphertext file
         //Console.WriteLine("Enter file path to get file from: ");
         //string getfilepath = Console.ReadLine();
-        string getfilepath = (@"C:\Users\Jess\Documents\Repos\Cryptography\hw1\hw1\text_en.txt");
+        string getfilepath = (@"C:\Users\Jess\Desktop\test_en.txt");
 
 
         //Promt user for path to plan text file or ciphertext file to save it to
         //Console.WriteLine("Enter file path to send file to: ");
         //string setfilepath = Console.ReadLine();
-        string setfilepath = (@"C:\Users\Jess\Documents\Repos\Cryptography\hw1\hw1\test_de.txt");
-
-
+        string setfilepath = (@"C:\Users\Jess\Desktop\test.txt");
 
 
 
@@ -180,7 +202,7 @@ class Program
         else
         {
             //sends file off to be stored in a array
-            ReadFile(setfilepath);
+            ReadFile(getfilepath);
             //the array containing the file will be decrypted
             Decryption();
 
@@ -188,17 +210,9 @@ class Program
 
 
         //promt user for path and file name to save the plan text or cipher file
+        WriteFile(setfilepath);
 
-
-
-        //make ciphertext all UPPERCASE
-
-
-
-        //make plantext all lowercase
-
-
-
+        
     }
 }
 
