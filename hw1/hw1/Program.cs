@@ -181,13 +181,13 @@ class Program
         //Promt user for path to plan text file or ciphertext file
         //Console.WriteLine("Enter file path to get file from: ");
         //string getfilepath = Console.ReadLine();
-        string getfilepath = (@"C:\Users\Jess\Desktop\test_en.txt");
+        string getfilepath = (@"C:\Users\Jess\Documents\Repos\Cryptography\hw1\hw1\test_en.txt");
 
 
         //Promt user for path to plan text file or ciphertext file to save it to
         //Console.WriteLine("Enter file path to send file to: ");
         //string setfilepath = Console.ReadLine();
-        string setfilepath = (@"C:\Users\Jess\Desktop\test.txt");
+        string setfilepath = (@"C:\Users\Jess\Documents\Repos\Cryptography\hw1\hw1\test_de.txt");
 
 
 
