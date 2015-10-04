@@ -204,6 +204,8 @@ class Program
     static char[] user_file;
     //the characters from the user file that have been transposed
     static char[] cryp_file;
+    static List<bool> found = new List<bool>();
+    static List<Tuple<List<string>, int>> completed_lists = new List<Tuple<List<string>, int>>();
 
     //stores all keys into a list
     static void CreateAlphKeyList ()
@@ -326,6 +328,13 @@ class Program
                     i++;
                     j = -1;
                 }
+
+            }
+            else if (!Char.IsLetter(user_file[i]))
+            {
+                cryp_file[i] = user_file[i];
+                i++;
+                j = -1;
             }
             else
             {
@@ -350,7 +359,7 @@ class Program
         for (int i = 0; i < cryp_file.Length; i++)
         {
             //find the dilmater after each word
-            if (cryp_file[i] != '\0')
+            if (cryp_file[i] != '\0' && !Char.IsSeparator(cryp_file[i]))
             {
                 temp_char_list.Add(cryp_file[i]);
 
@@ -374,7 +383,7 @@ class Program
                 }
             }
             //if space is found then add to list of strings
-            else if (cryp_file[i] == '\0')
+            else
             {
                 //temp to hold chars found before the space
                 string temp_string = "";
@@ -397,6 +406,26 @@ class Program
 
     static void CheckDictionary()
     {
+        int num_true = 0;
+        int num_false = 0;
+
+        //goes through list of words in user file and 
+        //checks to see if they are english words
+        for(int i = 0; i < user_word_list.Count(); i++)
+        {
+            found.Add(english_dict.Contains(user_word_list[i]));
+
+            //counts the number of trues and false
+            if (found[i] == true)
+                num_true++;
+
+            if (found[i] == false)
+                num_false++;
+        }
+
+        Tuple<List<string>, int> temp = new Tuple<List<string>, int>(user_word_list, num_false);
+        completed_lists.Add(temp);
+        /////////add the num of trues and falses into a tuple with the list of strings to check later//////////
 
     }
 
@@ -404,14 +433,13 @@ class Program
     {
         //start at 1 because 0 will always be the original alphabet
         int num_of_current_key = 1;
-        bool found = false;
 
         //need to read in dictionary from file, store in list of strings
-        string dictionarypath = (@"C:\Users\Jess\Documents\Repos\Cryptography\hw1_part2\hw1_part2\dictionary.txt");
+        string dictionarypath = (@"C:\Users\Jess\Documents\Repos\Cryptography\hw1_part2\hw1_part2\new_dictionary.txt");
         CreateDictionary(dictionarypath);
 
         //need to read in users file once char at a time
-        string getfilepath = (@"C:\Users\Jess\Documents\Repos\Cryptography\hw1_part2\hw1_part2\test_en.txt");
+        string getfilepath = (@"C:\Users\Jess\Documents\Repos\Cryptography\hw1_part2\hw1_part2\test_de.txt");
 
         //reads the users file
         ReadFile(getfilepath);
@@ -419,7 +447,7 @@ class Program
         //create all shifted alphabets (all possible keys)
         CreateAlphKeyList();
 
-        while (num_of_current_key <= TOTAL_ALPH_NUM || found == false)
+        while (num_of_current_key <= TOTAL_ALPH_NUM)
         {
             //decrypt file with 1st shifted key alphabet
             Decryption(num_of_current_key);
@@ -430,6 +458,10 @@ class Program
             //check dictionary for words
             CheckDictionary();
 
+
+            /////////////////////////////////////////////////move later///////////////////////////////////////////////////////////
+            user_word_list.Clear();
+            found.Clear();
             
             //repeat until correct key is found
             num_of_current_key++;
