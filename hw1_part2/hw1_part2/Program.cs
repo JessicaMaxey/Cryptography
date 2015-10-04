@@ -423,14 +423,19 @@ class Program
                 num_false++;
         }
 
+        //add the num of trues and falses into a tuple with 
+        //the list of strings to compare the number of falses 
+        //later to see which has the least amount of falses. 
+        //This will be the correct file
         Tuple<List<string>, int> temp = new Tuple<List<string>, int>(user_word_list, num_false);
         completed_lists.Add(temp);
-        /////////add the num of trues and falses into a tuple with the list of strings to check later//////////
 
     }
 
     static void Main(string[] args)
     {
+        Tuple<List<string>, int> winner;
+
         //start at 1 because 0 will always be the original alphabet
         int num_of_current_key = 1;
 
@@ -447,7 +452,7 @@ class Program
         //create all shifted alphabets (all possible keys)
         CreateAlphKeyList();
 
-        while (num_of_current_key <= TOTAL_ALPH_NUM)
+        while (num_of_current_key < TOTAL_ALPH_NUM)
         {
             //decrypt file with 1st shifted key alphabet
             Decryption(num_of_current_key);
@@ -458,14 +463,36 @@ class Program
             //check dictionary for words
             CheckDictionary();
 
-
-            /////////////////////////////////////////////////move later///////////////////////////////////////////////////////////
+            //resets data for next round
             user_word_list.Clear();
             found.Clear();
             
             //repeat until correct key is found
             num_of_current_key++;
         };
+
+
+        ///////////////////////////////////////////////////////////////////////////////////////////////////maybe find better sort or something///////////////////////////////////////////////////////////////////////////////////////
+        //initialize winner with some data
+        winner = completed_lists[0];
+
+        //compare the number falses across all keys
+        for(int i = 0; i < completed_lists.Count(); i++)
+        {
+            for (int j = 0; j < completed_lists.Count() - 1; j++)
+            {
+                if (completed_lists[j].Item2 < completed_lists[j + 1].Item2)
+                {
+                    if (completed_lists[j].Item2 < winner.Item2)
+                    winner = completed_lists[j];
+                }
+            }
+        }
+
+        for (int i = 0; i < completed_lists.Count(); i++)
+        {
+            completed_lists[i].Item2.CompareTo(completed_lists[i + 1].Item2);
+        }
 
         //store correct file
 
