@@ -86,7 +86,8 @@ class Program
 
         int i = 0;
 
-        while(i != user_file.Length)
+        //loops through the char[] and creates the new file
+        while (i != user_file.Length)
         {
             writer.Write(cryp_file[i]);
             i++;
@@ -102,10 +103,13 @@ class Program
         int i = 0;
         int j = 0;
 
+        //loops through and does a shifted based on the key
         while (i != user_file.Length && j != 26)
         {
+            //if the char is a letter then is does the shift
             if (Char.IsLetter(user_file[i]))
             {
+                //during the compare it makes sure that both sides are uppercase
                 if (Char.ToUpper(user_file[i]) == Char.ToUpper(alphabet[j]))
                 {
                     //make ciphertext all UPPERCASE
@@ -114,6 +118,8 @@ class Program
                     j = -1;
                 }
             }
+            //if it is not a letter it keeps it in the array and does not do a shift on it
+            //this way we can write the file back and it will still have spaces and punt.
             else if (!Char.IsLetter(user_file[i]))
             {
                 cryp_file[i] = user_file[i];
@@ -136,11 +142,14 @@ class Program
 
         int i = 0;
         int j = 0;
-
+        
+        //loops through and does a shifted based on the key
         while (i != user_file.Length && j != 26)
         {
+            //if the char is a letter then is does the shift
             if (Char.IsLetter(user_file[i]))
             {
+                //during the compare it makes sure that both sides are lowercase
                 if (Char.ToLower(user_file[i]) == Char.ToLower(with_key_alph[j]))
                 {
                     //make plantext all lowercase
@@ -149,6 +158,8 @@ class Program
                     j = -1;
                 }
             }
+            //if it is not a letter it keeps it in the array and does not do a shift on it
+            //this way we can write the file back and it will still have spaces and punt.
             else if (!Char.IsLetter(user_file[i]))
             {
                 cryp_file[i] = user_file[i];
@@ -191,16 +202,13 @@ class Program
 
 
         //Promt user for path to plan text file or ciphertext file
-        //Console.WriteLine("Enter file path to get file from: ");
-        //string getfilepath = Console.ReadLine();
-        string getfilepath = (@"C:\Users\Jess\Documents\Repos\Cryptography\hw1\hw1\test_de.txt");
+        Console.WriteLine("Enter file path to get file from: ");
+        string getfilepath = Console.ReadLine();
 
 
         //Promt user for path to plan text file or ciphertext file to save it to
-        //Console.WriteLine("Enter file path to send file to: ");
-        //string setfilepath = Console.ReadLine();
-        string setfilepath = (@"C:\Users\Jess\Documents\Repos\Cryptography\hw1\hw1\test_en.txt");
-
+        Console.WriteLine("Enter file path to send file to: ");
+        string setfilepath = Console.ReadLine();
 
 
         if (choice == '1')

@@ -467,11 +467,17 @@ class Program
         string dictionarypath = (@"C:\Users\jessica.maxey\Desktop\dictionary.txt");
         CreateDictionary(dictionarypath);
 
-        //need to read in users file once char at a time
-        string getfilepath = (@"C:\Users\jessica.maxey\Desktop\test_de.txt");
-        string setfilepath = (@"c:\users\jessica.maxey\desktop\finished.txt");
 
-        //reads the users file
+        //Promt user for path to plan text file or ciphertext file
+        Console.WriteLine("Enter file path to get file from: ");
+        string getfilepath = Console.ReadLine();
+
+
+        //Promt user for path to plan text file or ciphertext file to save it to
+        Console.WriteLine("Enter file path to send file to: ");
+        string setfilepath = Console.ReadLine();
+
+        //need to read in users file once char at a time
         ReadFile(getfilepath);
 
         //create all shifted alphabets (all possible keys)
