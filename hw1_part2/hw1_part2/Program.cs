@@ -11,6 +11,8 @@ class Program
     const int TOTAL_ALPH_NUM = 26;
     //the number in the list of keys that the original alphabet with no shift is located
     const int ORIGINAL_ALPHABET = 0;
+    //the number in the sorted array that equals the lowest amount of falses, which would be the correct key
+    const int CORRECT_KEY = 0;
 
     static char[] alph_0_shift = new char[] {'a', 'b', 'c', 'd', 'e',
                                              'f', 'g', 'h', 'i', 'j',
@@ -204,8 +206,10 @@ class Program
     static char[] user_file;
     //the characters from the user file that have been transposed
     static char[] cryp_file;
+    //keeps track of how many falses there are after searching through the dictionary
     static List<bool> found = new List<bool>();
-    static List<Tuple<List<string>, int>> completed_lists = new List<Tuple<List<string>, int>>();
+    //keeps the string that is being checked by the dictionary, the number of falses from the dictionary search, and the original char[]
+    static List<Tuple<List<string>, int, char[]>> completed_lists = new List<Tuple<List<string>, int, char[]>>();
 
     //stores all keys into a list
     static void CreateAlphKeyList ()
@@ -301,11 +305,13 @@ class Program
 
         int i = 0;
 
-        while (i != user_file.Length)
+        //loops through the char[] and creates the new file
+        while (i != completed_lists[CORRECT_KEY].Item3.Length)
         {
-            writer.Write(cryp_file[i]);
+            writer.Write(completed_lists[CORRECT_KEY].Item3[i]);
             i++;
         }
+
 
         writer.Close();
     }
@@ -317,10 +323,13 @@ class Program
         int i = 0;
         int j = 0;
 
+        //loops through and does a shifted based on the key
         while (i != user_file.Length && j != 26)
         {
+            //if the char is a letter then is does the shift
             if (Char.IsLetter(user_file[i]))
             {
+                //during the compare it makes sure that both sides are lowercase
                 if (Char.ToLower(user_file[i]) == Char.ToLower(all_keys_list[num_of_current_key][j]))
                 {
                     //make plantext all lowercase
@@ -330,6 +339,8 @@ class Program
                 }
 
             }
+            //if it is not a letter it keeps it in the array and does not do a shift on it
+            //this way we can write the file back and it will still have spaces and punt.
             else if (!Char.IsLetter(user_file[i]))
             {
                 cryp_file[i] = user_file[i];
@@ -350,8 +361,6 @@ class Program
     //the dictionary to see if it is the currect list of english words
     static void MakeIntoStrings()
     {
-        int num_of_words = 0;
-
         //temp list to hold chars to be added to the list of strings
         List<char> temp_char_list = new List<char>();
         //loop through the key shifted char array
@@ -427,24 +436,40 @@ class Program
         //the list of strings to compare the number of falses 
         //later to see which has the least amount of falses. 
         //This will be the correct file
-        Tuple<List<string>, int> temp = new Tuple<List<string>, int>(user_word_list, num_false);
-        completed_lists.Add(temp);
+        completed_lists.Add(new Tuple<List<string>, int, char[]>(user_word_list, num_false, cryp_file));
 
+    }
+
+    static void SortLists ()
+    {
+        //compare the number falses across all keys and does a basic bubble sort to 
+        //get the lowest number of falses to the top of the list
+        for (int i = 0; i < completed_lists.Count(); i++)
+        {
+            for (int j = 0; j < completed_lists.Count() - 1; j++)
+            {
+                if (completed_lists[j].Item2 > completed_lists[j + 1].Item2)
+                {
+                    Tuple<List<string>, int, char[]> temp = completed_lists[j + 1];
+                    completed_lists[j + 1] = completed_lists[j];
+                    completed_lists[j] = temp;
+                }
+            }
+        }
     }
 
     static void Main(string[] args)
     {
-        Tuple<List<string>, int> winner;
-
         //start at 1 because 0 will always be the original alphabet
         int num_of_current_key = 1;
 
         //need to read in dictionary from file, store in list of strings
-        string dictionarypath = (@"C:\Users\Jess\Documents\Repos\Cryptography\hw1_part2\hw1_part2\new_dictionary.txt");
+        string dictionarypath = (@"C:\Users\jessica.maxey\Desktop\dictionary.txt");
         CreateDictionary(dictionarypath);
 
         //need to read in users file once char at a time
-        string getfilepath = (@"C:\Users\Jess\Documents\Repos\Cryptography\hw1_part2\hw1_part2\test_de.txt");
+        string getfilepath = (@"C:\Users\jessica.maxey\Desktop\test_de.txt");
+        string setfilepath = (@"c:\users\jessica.maxey\desktop\finished.txt");
 
         //reads the users file
         ReadFile(getfilepath);
@@ -464,37 +489,18 @@ class Program
             CheckDictionary();
 
             //resets data for next round
-            user_word_list.Clear();
+            user_word_list = new List<string>();
             found.Clear();
             
             //repeat until correct key is found
             num_of_current_key++;
         };
 
-
-        ///////////////////////////////////////////////////////////////////////////////////////////////////maybe find better sort or something///////////////////////////////////////////////////////////////////////////////////////
-        //initialize winner with some data
-        winner = completed_lists[0];
-
-        //compare the number falses across all keys
-        for(int i = 0; i < completed_lists.Count(); i++)
-        {
-            for (int j = 0; j < completed_lists.Count() - 1; j++)
-            {
-                if (completed_lists[j].Item2 < completed_lists[j + 1].Item2)
-                {
-                    if (completed_lists[j].Item2 < winner.Item2)
-                    winner = completed_lists[j];
-                }
-            }
-        }
-
-        for (int i = 0; i < completed_lists.Count(); i++)
-        {
-            completed_lists[i].Item2.CompareTo(completed_lists[i + 1].Item2);
-        }
+        //sorts the number of falses, the least amount of falses will be at the top of the list
+        SortLists();
 
         //store correct file
+        WriteFile(setfilepath);
 
     }
 }
