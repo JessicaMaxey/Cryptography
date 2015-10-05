@@ -50,7 +50,7 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="dictionary.txt" />
+    <EmbeddedResource Include="dictionary.txt" />
     <Content Include="test.txt" />
     <Content Include="test_de.txt" />
     <Content Include="test_en.txt" />

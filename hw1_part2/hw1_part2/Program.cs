@@ -464,7 +464,7 @@ class Program
         int num_of_current_key = 1;
 
         //need to read in dictionary from file, store in list of strings
-        string dictionarypath = (@"C:\Users\jessica.maxey\Desktop\dictionary.txt");
+        string dictionarypath = (@"dictionary.txt");
         CreateDictionary(dictionarypath);
 
 
