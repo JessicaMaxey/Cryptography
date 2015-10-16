@@ -203,12 +203,12 @@ class Program
 
         //Promt user for path to plan text file or ciphertext file
         Console.WriteLine("Enter file path to get file from: ");
-        string getfilepath = Console.ReadLine();
+        string getfilepath = (@"C:\Users\Jessica\Desktop\finished.txt");
 
 
         //Promt user for path to plan text file or ciphertext file to save it to
         Console.WriteLine("Enter file path to send file to: ");
-        string setfilepath = Console.ReadLine();
+        string setfilepath = (@"C:\Users\Jessica\Desktop\finished_2.txt");
 
 
         if (choice == '1')
