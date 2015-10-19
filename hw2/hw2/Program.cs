@@ -211,34 +211,71 @@ namespace hw2
 
         static void Main(string[] args)
         {
+            bool exception = false;
 
-            string get_file;
-            string set_file;
-            string str_key;
-            //get encryption or decryption
-            //get key
+            do
+            {
+                try
+                {
+                    char choice = ' ';
+                    string get_file;
+                    string set_file;
+                    string str_key;
+                    exception = false;
 
-            //get file location
-            //get_file = (@"en.txt");
-            get_file = (@"de.txt");
-            //get where to make the new file
-            set_file = ("C:/Users/Jess/Desktop/finished.txt");
+                    //Read in if user wants a encryption or decryption
+                    do
+                    {
+                        Console.WriteLine("Please enter 1 for encryption or 2 for decryption: ");
+                        choice = Convert.ToChar(Console.ReadLine());
 
-            Console.WriteLine("Enter key: ");
-            str_key = Console.ReadLine();
+                    } while (!(choice == '1' || choice == '2'));
 
-            char[] key = str_key.ToCharArray();
+                    //Read in key from user
+                    Console.WriteLine("Enter key: ");
+                    str_key = Console.ReadLine();
 
-            //do the encryption
-            ReadFile(get_file);
-            //Encryption(key);
-            //or
-            //do the decryption
-            Decryption(key);
+                    //converts the key as a string to a char array for ease of processing
+                    char[] key = str_key.ToCharArray();
 
-            //save that bad boy
-            WriteFile(set_file);
-            //done
+                    //Promt user for path to plan text file or ciphertext file
+                    Console.WriteLine("Enter file path to get file from: ");
+                    get_file = Console.ReadLine();
+                    //get_file = (@"en.txt");
+                    //get_file = (@"de.txt");
+
+                    //Promt user for path to plan text file or ciphertext file to save it to
+                    Console.WriteLine("Enter file path to send file to: ");
+                    set_file = Console.ReadLine();
+                    //set_file = ("C:/Users/Jess/Desktop/finished.txt");
+
+
+                    //sends file off to be stored in a array
+                    ReadFile(get_file);
+
+                    //do the encryption
+                    if (choice == '1')
+                    {
+                        //the array containing the file will be encrypted
+                        Encryption(key);
+
+                    }
+                    //do the decryption
+                    else if (choice == '2')
+                    {
+                        //the array containing the file will be decrypted
+                        Decryption(key);
+
+                    }
+
+                    //save that bad boy
+                    WriteFile(set_file);
+                }
+                catch (Exception e)
+                {
+                    exception = true;
+                }
+            } while (exception == true);
         }
     }
 }
