@@ -108,41 +108,50 @@ namespace hw2
 
             for (int i = 0; i < user_file.Length; i++)
             {
-                //this well get the left side index
-                for (int y = 0; y < 25; y++)
+                //if the char is a letter then is does the shift
+                if (Char.IsLetter(user_file[i]))
                 {
-                    if (Char.ToUpper(vignere_table[y, 0]) == Char.ToUpper(key[j]))
+                    //this well get the left side index
+                    for (int y = 0; y < 25; y++)
                     {
-                        y_coord = y;
-                        break;
+                        if (Char.ToUpper(vignere_table[y, 0]) == Char.ToUpper(key[j]))
+                        {
+                            y_coord = y;
+                            break;
+                        }
+                    }
+
+
+                    //this well get the top index
+                    for (int x = 0; x < 25; x++)
+                    {
+                        if (Char.ToUpper(vignere_table[0, x]) == Char.ToUpper(user_file[i]))
+                        {
+                            x_coord = x;
+                            break;
+                        }
+                    }
+
+                    //stores the letter at the location found above
+                    cryp_file[i] = Char.ToUpper(vignere_table[y_coord, x_coord]);
+
+                    //next letter in key
+                    if (j < (key.Length - 1))
+                    {
+                        j++;
+                    }
+                    //if at end of key, restart from beginning
+                    else
+                    {
+                        j = 0;
                     }
                 }
-
-
-                //this well get the top index
-                for (int x = 0; x < 25; x++)
+                //if it is not a letter it keeps it in the array and does not do a shift on it
+                //this way we can write the file back and it will still have spaces and punt.
+                else if (!Char.IsLetter(user_file[i]))
                 {
-                    if (Char.ToUpper(vignere_table[0, x]) == Char.ToUpper(user_file[i]))
-                    {
-                        x_coord = x;
-                        break;
-                    }
+                    cryp_file[i] = user_file[i];
                 }
-
-                //stores the letter at the location found above
-                cryp_file[i] = Char.ToUpper(vignere_table[y_coord, x_coord]);
-
-                //next letter in key
-                if (j < (key.Length - 1))
-                {
-                    j++;
-                }
-                //if at end of key, restart from beginning
-                else
-                {
-                    j = 0;
-                }
-
 
             }
 
@@ -168,44 +177,53 @@ namespace hw2
 
             for (int i = 0; i < user_file.Length; i++)
             {
-                y = 0;
-                //this well get the left side index
-                for (; y < 25; y++)
+                //if the char is a letter then is does the shift
+                if (Char.IsLetter(user_file[i]))
                 {
-                    if (Char.ToLower(vignere_table[y, 0]) == Char.ToLower(key[j]))
+                    y = 0;
+                    //this well get the left side index
+                    for (; y < 25; y++)
                     {
-                        y_coord = y;
-                        break;
+                        if (Char.ToLower(vignere_table[y, 0]) == Char.ToLower(key[j]))
+                        {
+                            y_coord = y;
+                            break;
+                        }
+                    }
+
+
+
+                    //this well get the top index
+                    for (int x = 0; x < 25; x++)
+                    {
+                        if (Char.ToLower(vignere_table[y, x]) == Char.ToLower(user_file[i]))
+                        {
+                            x_coord = x;
+                            break;
+                        }
+                    }
+
+
+                    //stores the letter at the location found above
+                    cryp_file[i] = Char.ToLower(vignere_table[0, x_coord]);
+
+                    //next letter in key
+                    if (j < (key.Length - 1))
+                    {
+                        j++;
+                    }
+                    //if at end of key, restart from beginning
+                    else
+                    {
+                        j = 0;
                     }
                 }
-
-
-
-                //this well get the top index
-                for (int x = 0; x < 25; x++)
+                //if it is not a letter it keeps it in the array and does not do a shift on it
+                //this way we can write the file back and it will still have spaces and punt.
+                else if (!Char.IsLetter(user_file[i]))
                 {
-                    if (Char.ToLower(vignere_table[y, x]) == Char.ToLower(user_file[i]))
-                    {
-                        x_coord = x;
-                        break;
-                    }
+                    cryp_file[i] = user_file[i];
                 }
-
-                //stores the letter at the location found above
-                cryp_file[i] = Char.ToLower(vignere_table[0, x_coord]);
-
-                //next letter in key
-                if (j < (key.Length - 1))
-                {
-                    j++;
-                }
-                //if at end of key, restart from beginning
-                else
-                {
-                    j = 0;
-                }
-
-
             }
         }
 
@@ -271,9 +289,9 @@ namespace hw2
                     //save that bad boy
                     WriteFile(set_file);
                 }
-                catch (Exception e)
-                {
-                    exception = true;
+                    catch (Exception e)
+                    {
+                        exception = true;
                 }
             } while (exception == true);
         }
