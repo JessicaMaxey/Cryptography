@@ -13,6 +13,7 @@ namespace hw3
     public partial class Form1 : Form
     {
         int[] original_eight = new int[8];
+        int[] ending_eight = new int[8];
         int[] right_four = new int[4];
         int[] left_four = new int[4];
         int[] key_one = new int[8];
@@ -165,6 +166,19 @@ namespace hw3
             //(left ending array goes to right, and right goes to left)
             Encryption(first_right_ending_value, first_left_ending_value, key_two, ref second_left_ending_value, ref second_right_ending_value);
 
+            //recombine into 8 bit array from the 2 4bit array results
+            for (int i = 0; i < 4; i++)
+            {
+                ending_eight[count++] = second_left_ending_value[i];
+            }
+
+            for (int i = 0; i < 4; i++)
+            {
+                ending_eight[count++] = second_right_ending_value[i];
+            }
+
+            //after second time through the encryption box, send to permutation box to be IP invertered
+            ending_eight = PermutationBox(8, starting_8bits, IP_inverse_box, ending_eight);
         }
 
         public void Encryption(int[] left_four, int[] right_four, int[] key, ref int[] ending_left, ref int[] ending_right)
@@ -248,6 +262,7 @@ namespace hw3
             ending_left = left_ending_value;
             ending_right = right_four;
         }
+
 
         public int ConvertStringtoInt (string data)
         {
