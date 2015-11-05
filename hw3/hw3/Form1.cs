@@ -171,6 +171,8 @@ namespace hw3
             int S0_col_index = 0;
             int S1_row_index = 0;
             int S1_col_index = 0;
+            int S0_value = 0;
+            int S1_value = 0;
 
             //send the right 4 bits to the expander
             int[] EP_top_bits = PermutationBox(4, four_starting_bits, EP_first_bits, right_four);
@@ -198,13 +200,33 @@ namespace hw3
             string bottom_row = Convert.ToString(bottom_bits_xOR[0])+ Convert.ToString(bottom_bits_xOR[3]);
             string bottom_col = Convert.ToString(bottom_bits_xOR[1])+ Convert.ToString(bottom_bits_xOR[2]);
 
-            for(int i = 0; i < 4; i++)
+            S0_row_index = ConvertStringtoInt(top_row);
+            S0_col_index = ConvertStringtoInt(top_col);
+            S1_row_index = ConvertStringtoInt(bottom_row);
+            S1_col_index = ConvertStringtoInt(bottom_col);
+
+            S0_value = S0_box[S0_row_index, S0_col_index];
+            S1_value = S1_box[S1_row_index, S1_col_index];
+
+        }
+
+        public int ConvertStringtoInt (string data)
+        {
+            int int_value = 0;
+
+            for (int i = 0; i < 4; i++)
             {
-
-
-
+                if (data == "00")
+                    int_value = 0;
+                else if (data == "01")
+                    int_value = 1;
+                else if (data == "10")
+                    int_value = 2;
+                else if (data == "11")
+                    int_value = 3;
             }
 
+            return int_value;
         }
 
         public void Decryption ()
