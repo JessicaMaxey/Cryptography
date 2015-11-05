@@ -17,7 +17,11 @@ namespace hw3
         int[] left_four = new int[4];
         int[] key_one = new int[8];
         int[] key_two = new int[8];
-
+        int[] first_left_ending_value = new int[4];
+        int[] first_right_ending_value = new int[4];
+        int[] second_left_ending_value = new int[4];
+        int[] second_right_ending_value = new int[4];
+        int[] P4 = { 2, 4, 3, 1 };
         int[] P10 = { 3, 5, 2, 7, 4, 10, 1, 9, 8, 6 };
         int[] P8 = { 6, 3, 7, 4, 8, 5, 10, 9 };
         int[] starting_8bits = { 1, 2, 3, 4, 5, 6, 7, 8 };
@@ -72,7 +76,7 @@ namespace hw3
 
 
             //recombine into 10 bits, take off the first 2 bits
-            first_P8 = RecombineBox8bits(3, 8, first_P8, first_left_shift, first_right_shift);
+            first_P8 = RecombineBoxbits(2, 3, 8, first_P8, first_left_shift, first_right_shift);
 
 
             //Do a P8 {6 3 7 4 8 5 10 9}
@@ -84,7 +88,7 @@ namespace hw3
             second_right_shift = PermutationBox(5, five_starting_bits, shift_two_bits, first_right_shift);
 
             //recombine and split off the leading 2 bits
-            second_P8 = RecombineBox8bits(3, 8, second_P8, second_left_shift, second_right_shift);
+            second_P8 = RecombineBoxbits(2, 3, 8, second_P8, second_left_shift, second_right_shift);
 
             //do another P8 {6 3 7 4 8 5 10 9}
             key_two = PermutationBox(8, P8_starting_bits, P8, second_P8);
@@ -109,10 +113,8 @@ namespace hw3
             return permutated_data;
         }
 
-        public int[] RecombineBox8bits (int first_loop_start, int second_loop_start, int[] combined_array, int[] left_array, int[] right_array)
+        public int[] RecombineBoxbits (int num_bits_off_front, int first_loop_start, int second_loop_start, int[] combined_array, int[] left_array, int[] right_array)
         {
-            int num_bits_off_front = 2;
-
             for (int i = 0; i < first_loop_start; i++)
             {
                 combined_array[i] = left_array[num_bits_off_front++];
@@ -159,6 +161,10 @@ namespace hw3
             //send to recursive function
             Encryption(left_four, right_four, key_one);
 
+            //when sending the int arrays to encrypt again, make sure to do the switch 
+            //(left ending array goes to right, and right goes to left)
+            Encryption(first_right_ending_value, first_left_ending_value, key_two);
+
         }
 
         public void Encryption(int[] left_four, int[] right_four, int[]key)
@@ -167,6 +173,8 @@ namespace hw3
             int[] bottom_bits_xOR = new int[4];
             int[] key_top_bits = new int[4];
             int[] key_bottom_bits = new int[4];
+            int[] to_P4_array = new int[4];
+            int[] left_ending_value = new int[4];
             int S0_row_index = 0;
             int S0_col_index = 0;
             int S1_row_index = 0;
@@ -208,25 +216,84 @@ namespace hw3
             S0_value = S0_box[S0_row_index, S0_col_index];
             S1_value = S1_box[S1_row_index, S1_col_index];
 
+            //convert back into bits
+            int[] left_P4_value = ConvertInttoIntArray(S0_value);
+            int[] right_P4_value = ConvertInttoIntArray(S1_value);
+
+
+            //combine back into 4 bits
+            int count = 0;
+
+            for (int i = 0; i < 2; i++)
+            {
+                to_P4_array[count++] = left_P4_value[i];
+            }
+
+            for (int i = 0; i < 2; i++)
+            {
+                to_P4_array[count++] = right_P4_value[i];
+            }
+
+
+            //do P4 on them
+            to_P4_array = PermutationBox(4, four_starting_bits, P4, to_P4_array);
+
+            //xOR the result from P4 with the starting left bits from the beginning
+            for (int i = 0; i < 4; i++)
+            {
+                left_ending_value[i] = left_four[i] ^ to_P4_array[i];
+            }
+
+            //store ending values
+            first_left_ending_value = left_ending_value;
+            first_right_ending_value = right_four;
         }
 
         public int ConvertStringtoInt (string data)
         {
             int int_value = 0;
 
-            for (int i = 0; i < 4; i++)
-            {
-                if (data == "00")
-                    int_value = 0;
-                else if (data == "01")
-                    int_value = 1;
-                else if (data == "10")
-                    int_value = 2;
-                else if (data == "11")
-                    int_value = 3;
-            }
+
+            if (data == "00")
+                int_value = 0;
+            else if (data == "01")
+                int_value = 1;
+            else if (data == "10")
+                int_value = 2;
+            else if (data == "11")
+                int_value = 3;
+
 
             return int_value;
+        }
+
+        public int[] ConvertInttoIntArray (int data)
+        {
+            int[] new_array = new int[2];
+
+            if (data == 0)
+            {
+                new_array[0] = 0;
+                new_array[1] = 0;
+            }
+            else if (data == 1)
+            {
+                new_array[0] = 0;
+                new_array[1] = 1;
+            }
+            else if (data == 2)
+            {
+                new_array[0] = 1;
+                new_array[1] = 0;
+            }
+            else if (data == 3)
+            {
+                new_array[0] = 1;
+                new_array[1] = 1;
+            }
+
+            return new_array;
+
         }
 
         public void Decryption ()
