@@ -159,15 +159,15 @@ namespace hw3
 
 
             //send to recursive function
-            Encryption(left_four, right_four, key_one);
+            Encryption(left_four, right_four, key_one, ref first_left_ending_value, ref first_right_ending_value);
 
             //when sending the int arrays to encrypt again, make sure to do the switch 
             //(left ending array goes to right, and right goes to left)
-            Encryption(first_right_ending_value, first_left_ending_value, key_two);
+            Encryption(first_right_ending_value, first_left_ending_value, key_two, ref second_left_ending_value, ref second_right_ending_value);
 
         }
 
-        public void Encryption(int[] left_four, int[] right_four, int[]key)
+        public void Encryption(int[] left_four, int[] right_four, int[] key, ref int[] ending_left, ref int[] ending_right)
         {
             int[] top_bits_xOR = new int[4];
             int[] bottom_bits_xOR = new int[4];
@@ -245,8 +245,8 @@ namespace hw3
             }
 
             //store ending values
-            first_left_ending_value = left_ending_value;
-            first_right_ending_value = right_four;
+            ending_left = left_ending_value;
+            ending_right = right_four;
         }
 
         public int ConvertStringtoInt (string data)
