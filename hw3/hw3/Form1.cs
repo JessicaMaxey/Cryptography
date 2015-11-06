@@ -69,7 +69,7 @@ namespace hw3
             new_key = PermutationBox(10, starting_10bits, P10, key);
 
             //split in half into 2 sets of 5 bits
-            Split(5, new_key, left_shift, right_shift);
+            Split(5, ref new_key, ref left_shift, ref right_shift);
 
             //then and do a 1 bit circular left shift on both
             first_left_shift = PermutationBox(5, five_starting_bits, shift_one_bits, left_shift);
@@ -131,7 +131,7 @@ namespace hw3
             return combined_array;
         }
 
-        public void Split (int array_size, int[] data_array, int[] left_shift, int[] right_shift)
+        public void Split (int array_size, ref int[] data_array, ref int[] left_shift, ref int[] right_shift)
         {
             int count = 0;
 
@@ -156,15 +156,15 @@ namespace hw3
             original_eight = PermutationBox(8, starting_8bits, IP_box, plaintext);
 
             //break down the IP'd plaintext into 2 sets of 4 bits
-            Split(4, original_eight, left_four, right_four);
+            Split(4, ref original_eight, ref left_four, ref right_four);
 
 
             //send to recursive function
-            Encryption(left_four, right_four, key_one, ref first_left_ending_value, ref first_right_ending_value);
+            CryptionBox(left_four, right_four, key_one, ref first_left_ending_value, ref first_right_ending_value);
 
             //when sending the int arrays to encrypt again, make sure to do the switch 
             //(left ending array goes to right, and right goes to left)
-            Encryption(first_right_ending_value, first_left_ending_value, key_two, ref second_left_ending_value, ref second_right_ending_value);
+            CryptionBox(first_right_ending_value, first_left_ending_value, key_two, ref second_left_ending_value, ref second_right_ending_value);
 
             //recombine into 8 bit array from the 2 4bit array results
             for (int i = 0; i < 4; i++)
@@ -181,7 +181,7 @@ namespace hw3
             ending_eight = PermutationBox(8, starting_8bits, IP_inverse_box, ending_eight);
         }
 
-        public void Encryption(int[] left_four, int[] right_four, int[] key, ref int[] ending_left, ref int[] ending_right)
+        public void CryptionBox(int[] left_four, int[] right_four, int[] key, ref int[] ending_left, ref int[] ending_right)
         {
             int[] top_bits_xOR = new int[4];
             int[] bottom_bits_xOR = new int[4];
@@ -202,7 +202,7 @@ namespace hw3
 
             //split the key into 2 sets of 4 bits and
             //xOR the top expanded bits with the first 4 of key one's bits
-            Split(4, key, key_top_bits, key_bottom_bits);
+            Split(4, ref key, ref key_top_bits, ref key_bottom_bits);
 
             for (int i = 0; i < 4; i++)
             {
@@ -311,20 +311,49 @@ namespace hw3
 
         }
 
-        public void Decryption ()
+        public void StartDecryption (int[] ciphertext)
         {
+            int count = 0;
 
+            //Do the first IP on the original 
+            original_eight = PermutationBox(8, starting_8bits, IP_box, ciphertext);
+
+            //break down the IP'd plaintext into 2 sets of 4 bits
+            Split(4, ref original_eight, ref left_four, ref right_four);
+
+
+            //send to recursive function
+            CryptionBox(left_four, right_four, key_two, ref first_left_ending_value, ref first_right_ending_value);
+
+            //when sending the int arrays to encrypt again, make sure to do the switch 
+            //(left ending array goes to right, and right goes to left)
+            CryptionBox(first_right_ending_value, first_left_ending_value, key_one, ref second_left_ending_value, ref second_right_ending_value);
+
+            //recombine into 8 bit array from the 2 4bit array results
+            for (int i = 0; i < 4; i++)
+            {
+                ending_eight[count++] = second_left_ending_value[i];
+            }
+
+            for (int i = 0; i < 4; i++)
+            {
+                ending_eight[count++] = second_right_ending_value[i];
+            }
+
+            //after second time through the encryption box, send to permutation box to be IP invertered
+            ending_eight = PermutationBox(8, starting_8bits, IP_inverse_box, ending_eight);
         }
 
         public void run ()
         {
-            int[] plaintext = { 1, 1, 1, 1, 0, 0, 1, 1 };
-            int[] key = { 1, 0, 1, 0, 0, 0, 0, 0, 1, 0 };
+            int[] plaintext = { 0, 0, 0, 0, 1, 1, 1, 1 };
+            int[] start_key = { 1, 0, 1, 0, 0, 0, 0, 0, 1, 0 };
 
-            GenerateKey(key);
+            GenerateKey(start_key);
 
             StartEncryption(plaintext);
 
+            StartDecryption(ending_eight);
 
         }
     }
