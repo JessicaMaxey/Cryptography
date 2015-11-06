@@ -14,6 +14,7 @@ namespace hw3
     {
         int[] original_eight = new int[8];
         int[] ending_eight = new int[8];
+        int[] second_ending_eight = new int[8];
         int[] right_four = new int[4];
         int[] left_four = new int[4];
         int[] key_one = new int[8];
@@ -47,7 +48,6 @@ namespace hw3
         public Form1()
         {
             InitializeComponent();
-            run();
         }
 
         public void GenerateKey(int [] key)
@@ -346,15 +346,46 @@ namespace hw3
 
         public void run ()
         {
-            int[] plaintext = { 0, 0, 0, 0, 1, 1, 1, 1 };
-            int[] start_key = { 1, 0, 1, 0, 0, 0, 0, 0, 1, 0 };
+            int[] plaintext = new int[8];
+            int[] start_key = new int[10];
+            //{ 1, 0, 1, 0, 0, 0, 0, 0, 1, 0 };
+
+            char[] get_plaintext_text = text_txtbx.Text.ToCharArray();
+
+            for (int i = 0; i < 8; i++)
+            {
+                plaintext[i] = (int)Char.GetNumericValue(get_plaintext_text[i]);
+            }
+
+            char[] get_key_text = key_txtbx.Text.ToCharArray();
+
+            for (int i = 0; i < 10; i++)
+            {
+                start_key[i] = (int)Char.GetNumericValue(get_key_text[i]);
+            }
 
             GenerateKey(start_key);
 
             StartEncryption(plaintext);
 
+            second_ending_eight = ending_eight;
+
+            for (int i = 0; i < 8; i++)
+            {
+                result_1_lbl.Text += second_ending_eight[i].ToString();
+            }
+
             StartDecryption(ending_eight);
 
+            for (int i = 0; i < 8; i++)
+            {
+                result_2_lbl.Text += ending_eight[i].ToString();
+            }
+        }
+
+        private void go_btn_Click(object sender, EventArgs e)
+        {
+            run();
         }
     }
 }
