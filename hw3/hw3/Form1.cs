@@ -344,48 +344,120 @@ namespace hw3
             ending_eight = PermutationBox(8, starting_8bits, IP_inverse_box, ending_eight);
         }
 
-        public void run ()
+        public void run_encryption()
         {
-            int[] plaintext = new int[8];
-            int[] start_key = new int[10];
-            //{ 1, 0, 1, 0, 0, 0, 0, 0, 1, 0 };
+            try
+            { 
+                result_txtbx.Clear();
 
-            char[] get_plaintext_text = text_txtbx.Text.ToCharArray();
+                int[] plaintext = new int[8];
+                int[] start_key = new int[10];
+                //{ 1, 0, 1, 0, 0, 0, 0, 0, 1, 0 };
 
-            for (int i = 0; i < 8; i++)
+                char[] get_plaintext_text = text_txtbx.Text.ToCharArray();
+
+                for (int i = 0; i < 8; i++)
+                {
+                    plaintext[i] = (int)Char.GetNumericValue(get_plaintext_text[i]);
+                }
+
+                char[] get_key_text = key_txtbx.Text.ToCharArray();
+
+                for (int i = 0; i < 10; i++)
+                {
+                    start_key[i] = (int)Char.GetNumericValue(get_key_text[i]);
+                }
+
+                GenerateKey(start_key);
+
+                StartEncryption(plaintext);
+
+                second_ending_eight = ending_eight;
+
+                for (int i = 0; i < 8; i++)
+                {
+                    result_txtbx.Text += second_ending_eight[i].ToString();
+                }
+
+                original_eight = new int[8];
+                ending_eight = new int[8];
+                second_ending_eight = new int[8];
+                right_four = new int[4];
+                left_four = new int[4];
+                key_one = new int[8];
+                key_two = new int[8];
+                first_left_ending_value = new int[4];
+                first_right_ending_value = new int[4];
+                second_left_ending_value = new int[4];
+                second_right_ending_value = new int[4];
+            }
+            catch (Exception e)
             {
-                plaintext[i] = (int)Char.GetNumericValue(get_plaintext_text[i]);
+                MessageBox.Show(e.Message, "Encryption", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+}
+
+        public void run_decryption()
+        {
+            try
+            {
+                result_txtbx.Clear();
+
+                int[] plaintext = new int[8];
+                int[] start_key = new int[10];
+                //{ 1, 0, 1, 0, 0, 0, 0, 0, 1, 0 };
+
+                char[] get_plaintext_text = text_txtbx.Text.ToCharArray();
+
+                for (int i = 0; i < 8; i++)
+                {
+                    plaintext[i] = (int)Char.GetNumericValue(get_plaintext_text[i]);
+                }
+
+                char[] get_key_text = key_txtbx.Text.ToCharArray();
+
+                for (int i = 0; i < 10; i++)
+                {
+                    start_key[i] = (int)Char.GetNumericValue(get_key_text[i]);
+                }
+
+                GenerateKey(start_key);
+
+                StartDecryption(plaintext);
+
+
+                for (int i = 0; i < 8; i++)
+                {
+                    result_txtbx.Text += ending_eight[i].ToString();
+                }
+
+                original_eight = new int[8];
+                ending_eight = new int[8];
+                second_ending_eight = new int[8];
+                right_four = new int[4];
+                left_four = new int[4];
+                key_one = new int[8];
+                key_two = new int[8];
+                first_left_ending_value = new int[4];
+                first_right_ending_value = new int[4];
+                second_left_ending_value = new int[4];
+                second_right_ending_value = new int[4];
+            }
+            catch (Exception e)
+            {
+                MessageBox.Show(e.Message, "Decryption", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
 
-            char[] get_key_text = key_txtbx.Text.ToCharArray();
-
-            for (int i = 0; i < 10; i++)
-            {
-                start_key[i] = (int)Char.GetNumericValue(get_key_text[i]);
-            }
-
-            GenerateKey(start_key);
-
-            StartEncryption(plaintext);
-
-            second_ending_eight = ending_eight;
-
-            for (int i = 0; i < 8; i++)
-            {
-                result_1_lbl.Text += second_ending_eight[i].ToString();
-            }
-
-            StartDecryption(ending_eight);
-
-            for (int i = 0; i < 8; i++)
-            {
-                result_2_lbl.Text += ending_eight[i].ToString();
-            }
+        }
+        private void encryption_btn_Click(object sender, EventArgs e)
+        {
+            run_encryption();
         }
 
-        private void go_btn_Click(object sender, EventArgs e)
+        private void decryption_btn_Click(object sender, EventArgs e)
         {
-            run();
+            run_decryption();
+
         }
     }
 }
