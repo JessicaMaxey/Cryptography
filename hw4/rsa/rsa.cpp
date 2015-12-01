@@ -8,7 +8,7 @@
 using namespace System::Collections::Generic;
 using namespace Encryption;
 
-ull GeneratePrime(ull min, ull max)
+ull Encryption::diffie_hellman::GeneratePrime(ull min, ull max)
 {
 	while (1)
 	{
@@ -61,7 +61,7 @@ Keys ^ Encryption::diffie_hellman::KeyGen(ull p, ull q)
 	t = (p - 1) * (q - 1);
 	//3120
 
-	ret->public_key_e = GeneratePrime(1, t);
+	ret->public_key_e = GeneratePrime(10000, t);
 	ret->public_key_n = p * q;
 
 	//compute the private key, which is the mod inverse of e mod n

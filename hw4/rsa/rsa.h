@@ -21,6 +21,7 @@ namespace Encryption {
 	public:
 		static List<ull> ^ Encrypt(Keys ^ key, array<unsigned char> ^ message);
 		static array<unsigned char> ^ Decrypt(Keys ^ key, array<ull> ^ cipher_text);
+
 	};
 
 	public ref class diffie_hellman
@@ -28,9 +29,13 @@ namespace Encryption {
 	public:
 		///<summary>p is prime 1, q is prime 2, returns public and private keys in <c>keys</c> struct</summary>
 		static Keys ^ KeyGen(ull p, ull q);
+		static ull GeneratePrime(ull min, ull max);
+
 	
 		// TODO: Add your methods for this class here.
 	};
 
 
 }
+
+
